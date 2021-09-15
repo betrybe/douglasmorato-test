@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const url = process.env.MONGO_DB_URL || 'mongodb://mongodb:27017/Cookmaster';
+const url = process.env.MONGO_DB_URL || 'mongodb://localhost:27017/Cookmaster';
 const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Database Name

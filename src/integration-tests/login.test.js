@@ -6,7 +6,7 @@ const should = chai.should();
 const expect = chai.expect;
 
 const { MongoClient } = require('mongodb');
-const mongoDbUrl = 'mongodb://localhost:27017/Cookmaster';
+const mongoDbUrl = 'mongodb://mongodb:27017/Cookmaster';
 
 describe('Teste para verificar se api esta funcionando', () => {
   it('Espera um status 200 ao chamar a root da url', (done) => {
