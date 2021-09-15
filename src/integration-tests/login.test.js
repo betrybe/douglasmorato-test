@@ -6,7 +6,8 @@ const should = chai.should();
 const expect = chai.expect;
 
 const { MongoClient } = require('mongodb');
-const mongoDbUrl = 'mongodb://mongodb:27017/Cookmaster';
+
+const mongoDbUrl = process.env.MONGO_DB_URL || 'mongodb://mongodb:27017/Cookmaster';
 
 describe('Teste para verificar se api esta funcionando', () => {
   it('Espera um status 200 ao chamar a root da url', (done) => {
@@ -29,6 +30,7 @@ describe('POST /login - Teste para o endpoint de login', () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+
     db = connection.db('Cookmaster');
     await db.collection('users').deleteMany({});
     const users = [{ name: 'admin', email: 'root@email.com', password: 'admin', role: 'admin' }];

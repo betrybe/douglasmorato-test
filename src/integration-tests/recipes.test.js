@@ -5,7 +5,7 @@ const app = require('../api/server');
 const { MongoClient } = require('mongodb');
 const should = chai.should();
 const expect = chai.expect;
-const mongoDbUrl = 'mongodb://mongodb:27017/Cookmaster';
+const mongoDbUrl = process.env.MONGO_DB_URL || 'mongodb://mongodb:27017/Cookmaster';
 
 let defaultAdmin = {
   email: 'root@email.com',
