@@ -9,6 +9,8 @@ const { MongoClient } = require('mongodb');
 
 const mongoDbUrl = process.env.MONGO_DB_URL || 'mongodb://mongodb:27017/Cookmaster';
 
+const url = 'http://localhost:3000';
+
 describe('Teste para verificar se api esta funcionando', () => {
   it('Espera um status 200 ao chamar a root da url', (done) => {
     chai
@@ -43,7 +45,7 @@ describe('POST /login - Teste para o endpoint de login', () => {
 
   it('Verificando se o token e retornado com sucesso', (done) => {
     chai
-      .request(app)
+      .request(url)
       .post('/login')
       .send({
         email: 'root@email.com',
