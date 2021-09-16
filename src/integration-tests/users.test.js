@@ -2,10 +2,11 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 const app = require('../api/server');
-const { MongoClient } = require('mongodb');
+
 const should = chai.should();
 const expect = chai.expect;
-const mongoDbUrl = process.env.MONGO_DB_URL || 'mongodb://mongodb:27017/Cookmaster';
+
+const { dbConnect, dbDisconnect } = require('../utils/test/dbHandler.utils');
 
 let defaultUser = {
   email: 'root@email.com',
@@ -30,18 +31,11 @@ describe('POST /users - Testes para o endpoint /users', () => {
   });
 
   before(async () => {
-    connection = await MongoClient.connect(mongoDbUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    db = connection.db('Cookmaster');
-    await db.collection('users').deleteMany({});
-    const users = [{ name: 'admin', email: 'root@email.com', password: 'admin', role: 'admin' }];
-    await db.collection('users').insertMany(users);
+    dbConnect();
   });
 
   after(async () => {
-    await connection.close();
+    dbDisconnect();
   });
   it('Buscando todos dos usuarios', (done) => {
     chai

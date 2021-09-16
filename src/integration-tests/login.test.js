@@ -4,12 +4,8 @@ chai.use(chaiHttp);
 const app = require('../api/server');
 const should = chai.should();
 const expect = chai.expect;
-
-const { MongoClient } = require('mongodb');
-
-const mongoDbUrl = process.env.MONGO_DB_URL || 'mongodb://mongodb:27017/Cookmaster';
-
-const url = 'http://localhost:3000';
+const { dbConnect, dbDisconnect } = require('../utils/test/dbHandler.utils');
+// const mongoDbUrl = process.env.MONGO_DB_URL || 'mongodb://mongodb:27017/Cookmaster';
 
 describe('Teste para verificar se api esta funcionando', () => {
   it('Espera um status 200 ao chamar a root da url', (done) => {
@@ -24,28 +20,17 @@ describe('Teste para verificar se api esta funcionando', () => {
 });
 
 describe('POST /login - Teste para o endpoint de login', () => {
-  let connection;
-  let db;
-
   before(async () => {
-    connection = await MongoClient.connect(mongoDbUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
-    db = connection.db('Cookmaster');
-    await db.collection('users').deleteMany({});
-    const users = [{ name: 'admin', email: 'root@email.com', password: 'admin', role: 'admin' }];
-    await db.collection('users').insertMany(users);
+    dbConnect();
   });
 
   after(async () => {
-    await connection.close();
+    dbDisconnect();
   });
 
   it('Verificando se o token e retornado com sucesso', (done) => {
     chai
-      .request(url)
+      .request(app)
       .post('/login')
       .send({
         email: 'root@email.com',
@@ -58,9 +43,7 @@ describe('POST /login - Teste para o endpoint de login', () => {
         done();
       });
   });
-});
 
-describe('POST /login - Teste para o endpoint de login', () => {
   it('Verifica se tem algum campo não informado corretamente', (done) => {
     chai
       .request(app)
@@ -75,16 +58,13 @@ describe('POST /login - Teste para o endpoint de login', () => {
         done();
       });
   });
-});
-
-describe('POST /login - Teste para o endpoint de login', () => {
-  it('Verifica se o ususário e senha são corretos - Nesse caso foi passado uma senha incorreta', (done) => {
+  it('Verifica se o ususário e senha são corretos - Nesse caso foi passado um usuário incorreto', (done) => {
     chai
       .request(app)
       .post('/login')
       .send({
-        email: 'erickjacquin@gmail.com',
-        password: '123456',
+        email: 'erickjacquin@gmail.om',
+        password: '12345678',
       })
       .end((err, res) => {
         expect(res).to.have.status(401);
@@ -93,16 +73,13 @@ describe('POST /login - Teste para o endpoint de login', () => {
         done();
       });
   });
-});
-
-describe('POST /login - Teste para o endpoint de login', () => {
-  it('Verifica se o ususário e senha são corretos - Nesse caso foi passado um usuário incorreto', (done) => {
+  it('Verifica se o ususário e senha são corretos - Nesse caso foi passado uma senha incorreta', (done) => {
     chai
       .request(app)
       .post('/login')
       .send({
-        email: 'erickjacquin@gmail.om',
-        password: '12345678',
+        email: 'erickjacquin@gmail.com',
+        password: '123456',
       })
       .end((err, res) => {
         expect(res).to.have.status(401);

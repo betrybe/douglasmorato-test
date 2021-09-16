@@ -1,0 +1,12 @@
+{
+  "users": [
+    { "name": "admin", "email": "root@email.com", "password": "admin", "role": "admin" },
+    {
+      "name": "Erick Jacquin",
+      "email": "erickjacquin@gmail.om",
+      "password": "12345678",
+      "role": "user"
+    }
+  ],
+  "recipes": []
+}
