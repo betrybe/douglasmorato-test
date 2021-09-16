@@ -5,8 +5,7 @@ const app = require('../api/server');
 const { MongoClient } = require('mongodb');
 const should = chai.should();
 const expect = chai.expect;
-
-const { dbConnect, dbDisconnect } = require('../utils/test/dbHandler.utils');
+const mongoDbUrl = process.env.MONGO_DB_URL || 'mongodb://mongodb:27017/Cookmaster';
 
 let defaultAdmin = {
   email: 'root@email.com',
@@ -22,6 +21,9 @@ let tokenuser;
 let id;
 
 describe('Testes para o endpoint /recipes', () => {
+  let connection;
+  let db;
+
   beforeEach((done) => {
     chai
       .request(app)
@@ -33,7 +35,6 @@ describe('Testes para o endpoint /recipes', () => {
         done();
       });
   });
-
   beforeEach((done) => {
     chai
       .request(app)
@@ -47,11 +48,21 @@ describe('Testes para o endpoint /recipes', () => {
   });
 
   before(async () => {
-    dbConnect();
+    connection = await MongoClient.connect(mongoDbUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    db = connection.db('Cookmaster');
+    await db.collection('users').deleteMany({});
+    const users = [
+      { name: 'admin', email: 'root@email.com', password: 'admin', role: 'admin' },
+      { name: 'user', email: 'user@email.com', password: 'user', role: 'user' },
+    ];
+    await db.collection('users').insertMany(users);
   });
 
   after(async () => {
-    dbDisconnect();
+    await connection.close();
   });
 
   it('Buscando todos as receitas', (done) => {
