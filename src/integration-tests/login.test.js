@@ -1,6 +1,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
+process.env.PORT = 3001;
 const app = require('../api/server');
 const should = chai.should();
 const expect = chai.expect;
@@ -45,7 +46,7 @@ describe('POST /login - Teste para o endpoint de login', () => {
 
   it('Verificando se o token e retornado com sucesso', (done) => {
     chai
-      .request(url)
+      .request(app)
       .post('/login')
       .send({
         email: 'root@email.com',
